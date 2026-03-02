@@ -1,20 +1,106 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# WiFi Manager
 
-# Run and deploy your AI Studio app
+Aplikasi manajemen pelanggan WiFi dengan fitur:
+- 📊 Database pelanggan (CRUD)
+- 📅 Sesi penarikan (6 sesi per bulan)
+- 📦 Paket WiFi management
+- 🖨️ Print thermal receipt
+- ⚙️ Pengaturan sesi & printer
 
-This contains everything you need to run your app locally.
+## Tech Stack
 
-View your app in AI Studio: https://ai.studio/apps/9f070a0b-f431-4e77-a84c-27852bb55581
+- **Backend**: Node.js + Express
+- **Database**: MySQL
+- **Frontend**: React + Tailwind CSS (pre-built)
 
-## Run Locally
+## Quick Install (Linux)
 
-**Prerequisites:**  Node.js
+```bash
+curl -sL https://raw.githubusercontent.com/Chandra2702/WIFI-MANAGER/main/install.sh | sudo bash
+```
 
+## Manual Install
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 1. Prerequisites
+
+- Node.js 18+ 
+- MySQL 5.7+
+
+### 2. Clone & Install
+
+```bash
+git clone https://github.com/Chandra2702/WIFI-MANAGER.git
+cd WIFI-MANAGER
+npm install --production
+```
+
+### 3. Setup Database
+
+```sql
+CREATE DATABASE wifi_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### 4. Configure
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Edit `.env`:
+```
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=your_password
+DB_NAME=wifi_manager
+PORT=3000
+```
+
+### 5. Run
+
+```bash
+node server.js
+```
+
+Buka `http://localhost:3000`
+
+## Systemd Service
+
+```bash
+sudo nano /etc/systemd/system/wifi-manager.service
+```
+
+```ini
+[Unit]
+Description=WiFi Manager
+After=network.target mysql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/path/to/WIFI-MANAGER
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl enable wifi-manager
+sudo systemctl start wifi-manager
+```
+
+## Development
+
+Untuk development frontend:
+
+```bash
+npm install          # Install semua deps (termasuk devDeps)
+npm run build        # Build frontend ke folder public/
+npm run start        # Jalankan server
+```
+
+## License
+
+MIT
