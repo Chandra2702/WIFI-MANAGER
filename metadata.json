@@ -1,0 +1,5 @@
+{
+  "name": "WiFi Customer Manager",
+  "description": "A comprehensive database for managing WiFi customers, packages, and collection sessions based on configurable date ranges.",
+  "requestFramePermissions": []
+}
