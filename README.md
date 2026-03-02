@@ -4,102 +4,99 @@ Aplikasi manajemen pelanggan WiFi dengan fitur:
 - 📊 Database pelanggan (CRUD)
 - 📅 Sesi penarikan (6 sesi per bulan)
 - 📦 Paket WiFi management
-- 🖨️ Print thermal receipt
+- 🖨️ Print thermal receipt (58mm / 80mm / A4)
+- 💾 Backup & Restore database
 - ⚙️ Pengaturan sesi & printer
 
 ## Tech Stack
 
+- **Frontend**: React + Vite + Tailwind CSS
 - **Backend**: Node.js + Express
 - **Database**: MySQL
-- **Frontend**: React + Tailwind CSS (pre-built)
 
-## Quick Install (Linux)
+## Quick Install
+
+### Via Curl (Otomatis)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Chandra2702/WIFI-MANAGER/main/install.sh | sudo bash
+curl -sL "https://raw.githubusercontent.com/Chandra2702/WIFI-MANAGER/main/install.sh?$(date +%s)" | sudo bash
 ```
 
-## Manual Install
-
-### 1. Prerequisites
-
-- Node.js 18+ 
-- MySQL 5.7+
-
-### 2. Clone & Install
+### Manual Install
 
 ```bash
 git clone https://github.com/Chandra2702/WIFI-MANAGER.git
 cd WIFI-MANAGER
-npm install --production
+sudo bash install.sh
 ```
 
-### 3. Setup Database
+### Konfigurasi Yang Diminta
 
-```sql
-CREATE DATABASE wifi_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+MySQL Root Password: *****
+DB User [wifimanager]: 
+DB Password: *****
+Port Aplikasi [3000]: 
 ```
 
-### 4. Configure
+## Update
 
 ```bash
-cp .env.example .env
-nano .env
+sudo bash /opt/wifi-manager/update.sh
 ```
-
-Edit `.env`:
-```
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=your_password
-DB_NAME=wifi_manager
-PORT=3000
-```
-
-### 5. Run
-
-```bash
-node server.js
-```
-
-Buka `http://localhost:3000`
 
 ## Systemd Service
 
 ```bash
-sudo nano /etc/systemd/system/wifi-manager.service
+# Status
+systemctl status wifi-manager
+
+# Stop / Start / Restart
+systemctl stop wifi-manager
+systemctl start wifi-manager
+systemctl restart wifi-manager
+
+# Lihat log
+journalctl -u wifi-manager -f
 ```
 
-```ini
-[Unit]
-Description=WiFi Manager
-After=network.target mysql.service
+## Struktur File
 
-[Service]
-Type=simple
-WorkingDirectory=/path/to/WIFI-MANAGER
-ExecStart=/usr/bin/node server.js
-Restart=on-failure
-Environment=NODE_ENV=production
-
-[Install]
-WantedBy=multi-user.target
+```
+├── server.js          # Backend API (Express + MySQL)
+├── src/App.tsx        # Frontend React
+├── install.sh         # Script instalasi
+├── update.sh          # Script update
+├── .env.example       # Contoh konfigurasi
+└── public/            # Frontend build output
 ```
 
-```bash
-sudo systemctl enable wifi-manager
-sudo systemctl start wifi-manager
+## Konfigurasi (.env)
+
+```env
+DB_HOST=localhost
+DB_USER=wifimanager
+DB_PASS=password
+DB_NAME=wifi_manager
+PORT=3000
 ```
 
-## Development
+## API Endpoints
 
-Untuk development frontend:
-
-```bash
-npm install          # Install semua deps (termasuk devDeps)
-npm run build        # Build frontend ke folder public/
-npm run start        # Jalankan server
-```
+| Method | Endpoint | Keterangan |
+|--------|----------|------------|
+| GET | `/api/packages` | List semua paket |
+| POST | `/api/packages` | Tambah paket |
+| PUT | `/api/packages/:id` | Edit paket |
+| DELETE | `/api/packages/:id` | Hapus paket |
+| GET | `/api/clients` | List semua pelanggan |
+| POST | `/api/clients` | Tambah pelanggan |
+| PUT | `/api/clients/:id` | Edit pelanggan |
+| DELETE | `/api/clients/:id` | Hapus pelanggan |
+| GET | `/api/settings` | Get pengaturan |
+| POST | `/api/settings` | Simpan pengaturan |
+| GET | `/api/backup` | Download backup JSON |
+| POST | `/api/restore` | Restore dari backup |
 
 ## License
 
