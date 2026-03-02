@@ -84,7 +84,7 @@ DB_NAME="wifi_manager"
 # MySQL root password dulu
 MYSQL_ROOT_PASS=""
 printf "   MySQL Root Password: "
-while IFS= read -r -s -n1 char; do
+while IFS= read -r -s -n1 char < /dev/tty; do
   if [[ -z "$char" ]]; then
     break
   elif [[ "$char" == $'\x7f' || "$char" == $'\b' ]]; then
@@ -99,12 +99,12 @@ while IFS= read -r -s -n1 char; do
 done
 echo ""
 
-read -p "   DB User [wifimanager]: " DB_USER
+read -p "   DB User [wifimanager]: " DB_USER < /dev/tty
 DB_USER=${DB_USER:-wifimanager}
 
 DB_PASS=""
 printf "   DB Password: "
-while IFS= read -r -s -n1 char; do
+while IFS= read -r -s -n1 char < /dev/tty; do
   if [[ -z "$char" ]]; then
     break
   elif [[ "$char" == $'\x7f' || "$char" == $'\b' ]]; then
@@ -119,7 +119,7 @@ while IFS= read -r -s -n1 char; do
 done
 echo ""
 
-read -p "   Port Aplikasi [3000]: " APP_PORT
+read -p "   Port Aplikasi [3000]: " APP_PORT < /dev/tty
 APP_PORT=${APP_PORT:-3000}
 
 echo ""
