@@ -155,11 +155,25 @@ fi
 
 echo -e "\n${YELLOW}[4/7] Mendownload aplikasi...${NC}"
 
-if [ -d "$INSTALL_DIR/.git" ]; then
+# Deteksi apakah dijalankan dari dalam repo lokal (manual install)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+
+if [ -f "$SCRIPT_DIR/server.js" ] && [ -f "$SCRIPT_DIR/package.json" ]; then
+  # Manual install: copy dari folder lokal
+  echo -e "${BLUE}   ➜ Mengcopy dari folder lokal...${NC}"
+  if [ "$SCRIPT_DIR" != "$INSTALL_DIR" ]; then
+    mkdir -p "$INSTALL_DIR"
+    cp -rf "$SCRIPT_DIR"/* "$INSTALL_DIR"/ 2>/dev/null || true
+    cp -rf "$SCRIPT_DIR"/.[!.]* "$INSTALL_DIR"/ 2>/dev/null || true
+  fi
+elif [ -d "$INSTALL_DIR/.git" ]; then
+  # Sudah terinstall, update via git
   echo -e "${BLUE}   ➜ Update dari repository...${NC}"
   cd "$INSTALL_DIR"
+  git reset --hard origin/main > /dev/null 2>&1 || true
   git pull origin main > /dev/null 2>&1 || true
 else
+  # Fresh install via curl: clone dari GitHub
   rm -rf "$INSTALL_DIR"
   git clone "$REPO_URL" "$INSTALL_DIR" > /dev/null 2>&1
   cd "$INSTALL_DIR"
@@ -189,15 +203,11 @@ EOF
 
 echo -e "${GREEN}   ✅ File .env dibuat${NC}"
 
-# Build frontend if needed
-if [ -f "$INSTALL_DIR/public/index.html" ]; then
-  echo -e "${GREEN}   ✅ Frontend sudah ter-build${NC}"
-else
-  echo -e "${BLUE}   ➜ Building frontend...${NC}"
-  npm install > /dev/null 2>&1
-  npx vite build --outDir public > /dev/null 2>&1
-  echo -e "${GREEN}   ✅ Frontend ter-build${NC}"
-fi
+# Build frontend
+echo -e "${BLUE}   ➜ Building frontend...${NC}"
+npm install > /dev/null 2>&1
+npx vite build --outDir public > /dev/null 2>&1
+echo -e "${GREEN}   ✅ Frontend ter-build${NC}"
 
 # ==================== Create Systemd Service ====================
 
