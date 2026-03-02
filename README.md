@@ -41,6 +41,14 @@ Port Aplikasi [3000]:
 
 ## Update
 
+### Via Curl
+
+```bash
+curl -sL "https://raw.githubusercontent.com/Chandra2702/WIFI-MANAGER/main/update.sh?$(date +%s)" | sudo bash
+```
+
+### Manual
+
 ```bash
 sudo bash /opt/wifi-manager/update.sh
 ```
