@@ -21,11 +21,7 @@ import { motion, AnimatePresence } from 'motion/react';
 // Custom Dropdown Component
 const formatDate = (dateStr: string) => {
   if (!dateStr) return '-';
-  const date = new Date(dateStr);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return String(new Date(dateStr).getDate());
 };
 
 const CustomDropdown = ({
@@ -145,7 +141,7 @@ export default function App() {
   const [clientForm, setClientForm] = useState({
     name: '',
     package_id: '',
-    join_date: new Date().toISOString().split('T')[0]
+    join_date: String(new Date().getDate())
   });
 
   const [showPackageModal, setShowPackageModal] = useState(false);
@@ -201,7 +197,7 @@ export default function App() {
 
     setShowClientModal(false);
     setEditingClient(null);
-    setClientForm({ name: '', package_id: '', join_date: new Date().toISOString().split('T')[0] });
+    setClientForm({ name: '', package_id: '', join_date: String(new Date().getDate()) });
     fetchData();
   };
 
@@ -408,7 +404,7 @@ export default function App() {
           <button
             onClick={() => {
               setEditingClient(null);
-              setClientForm({ name: '', package_id: '', join_date: new Date().toISOString().split('T')[0] });
+              setClientForm({ name: '', package_id: '', join_date: String(new Date().getDate()) });
               setShowClientModal(true);
             }}
             className="flex items-center gap-1.5 md:gap-2 bg-indigo-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-indigo-700 transition-colors text-xs md:text-sm"
@@ -467,7 +463,7 @@ export default function App() {
                     <div className="sm:hidden text-[10px] text-slate-500 font-normal">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : 'N/A'}</div>
                   </td>
                   <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm hidden sm:table-cell">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : 'N/A'}</td>
-                  <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{formatDate(client.join_date)}</td>
+                  <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{new Date(client.join_date).getDate()}</td>
                   <td className="px-3 py-3 md:px-6 md:py-4 text-right space-x-1 md:space-x-2">
                     <button
                       onClick={() => {
@@ -475,7 +471,7 @@ export default function App() {
                         setClientForm({
                           name: client.name,
                           package_id: client.package_id.toString(),
-                          join_date: client.join_date
+                          join_date: String(new Date(client.join_date).getDate())
                         });
                         setShowClientModal(true);
                       }}
@@ -610,7 +606,7 @@ export default function App() {
                       {client.name}
                     </td>
                     <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : '-'}</td>
-                    <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{formatDate(client.join_date)}</td>
+                    <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{new Date(client.join_date).getDate()}</td>
                   </tr>
                 ))}
                 {filteredSesiClients.length === 0 && (
@@ -1018,7 +1014,7 @@ export default function App() {
           <button
             onClick={() => {
               setEditingClient(null);
-              setClientForm({ name: '', package_id: '', join_date: new Date().toISOString().split('T')[0] });
+              setClientForm({ name: '', package_id: '', join_date: String(new Date().getDate()) });
               setShowClientModal(true);
             }}
             className="bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 border-4 border-slate-50 active:scale-90 transition-transform"
@@ -1097,10 +1093,13 @@ export default function App() {
                   <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1">Tanggal Gabung</label>
                   <input
                     required
-                    type="date"
+                    type="number"
+                    min="1"
+                    max="31"
                     value={clientForm.join_date}
                     onChange={(e) => setClientForm({ ...clientForm, join_date: e.target.value })}
                     className="w-full px-3 py-1.5 md:px-4 md:py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-xs md:text-sm"
+                    placeholder="Contoh: 15"
                   />
                 </div>
                 <div className="pt-2 md:pt-4">
