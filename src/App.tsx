@@ -397,7 +397,7 @@ export default function App() {
     const end = parseInt(settings[`sesi_${sesiNum}_end`] || '0');
 
     return clients.filter(client => {
-      const day = new Date(client.join_date).getDate();
+      const day = getDay(client.join_date);
       return day >= start && day <= end;
     });
   };
