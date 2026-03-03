@@ -391,8 +391,8 @@ export default function App() {
         switch (dbSort) {
           case 'name_asc': return a.name.localeCompare(b.name);
           case 'name_desc': return b.name.localeCompare(a.name);
-          case 'date_asc': return new Date(a.join_date).getTime() - new Date(b.join_date).getTime();
-          case 'date_desc': return new Date(b.join_date).getTime() - new Date(a.join_date).getTime();
+          case 'date_asc': return Number(new Date(a.join_date).getDate()) - Number(new Date(b.join_date).getDate());
+          case 'date_desc': return Number(new Date(b.join_date).getDate()) - Number(new Date(a.join_date).getDate());
           default: return 0;
         }
       });
@@ -515,8 +515,8 @@ export default function App() {
         switch (sesiSort) {
           case 'name_asc': return a.name.localeCompare(b.name);
           case 'name_desc': return b.name.localeCompare(a.name);
-          case 'date_asc': return new Date(a.join_date).getTime() - new Date(b.join_date).getTime();
-          case 'date_desc': return new Date(b.join_date).getTime() - new Date(a.join_date).getTime();
+          case 'date_asc': return Number(new Date(a.join_date).getDate()) - Number(new Date(b.join_date).getDate());
+          case 'date_desc': return Number(new Date(b.join_date).getDate()) - Number(new Date(a.join_date).getDate());
           default: return 0;
         }
       });
