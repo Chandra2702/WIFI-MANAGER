@@ -1060,9 +1060,9 @@ export default function App() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden mx-4"
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 mx-4"
             >
-              <div className="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <div className="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
                 <h3 className="text-lg md:text-xl font-bold text-slate-800">
                   {editingClient ? 'Edit Client' : 'Add New Client'}
                 </h3>
