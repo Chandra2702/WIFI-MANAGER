@@ -292,7 +292,7 @@ export default function App() {
     let fontSize = '12px';
     let titleSize = '18px';
     let pageMargin = '3mm';
-    let pageSizeCSS = '80mm auto';
+    let pageSizeCSS = '80mm 297mm';
 
     if (paperSize === '58mm') {
       bodyWidth = '200px';
@@ -300,7 +300,7 @@ export default function App() {
       windowWidth = '280';
       fontSize = '10px';
       titleSize = '16px';
-      pageSizeCSS = '58mm auto';
+      pageSizeCSS = '58mm 297mm';
     } else if (paperSize === 'A4') {
       bodyWidth = '100%';
       bodyMaxWidth = '100%';
