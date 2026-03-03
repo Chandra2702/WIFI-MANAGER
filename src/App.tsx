@@ -972,7 +972,8 @@ export default function App() {
         </nav>
 
         <div className="p-8 text-xs text-slate-400 border-t border-slate-200">
-          &copy; 2024 WiFi Manager v1.0
+          &copy; 2026 WiFi Manager v1.0
+          <br />by Andriy Chandra
         </div>
       </aside>
 
