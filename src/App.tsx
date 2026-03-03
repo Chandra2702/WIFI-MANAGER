@@ -75,7 +75,7 @@ const CustomDropdown = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1"
+            className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-y-auto max-h-48 py-1"
           >
             {options.map((option) => (
               <button
@@ -1087,7 +1087,7 @@ export default function App() {
                     label="Paket WiFi"
                     value={clientForm.package_id}
                     onChange={(val) => setClientForm({ ...clientForm, package_id: val })}
-                    options={packages.map(pkg => ({
+                    options={[...packages].sort((a, b) => a.price - b.price).map(pkg => ({
                       value: pkg.id.toString(),
                       label: `${pkg.name} - Rp ${pkg.price.toLocaleString('id-ID')}`
                     }))}
