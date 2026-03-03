@@ -19,9 +19,17 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 // Custom Dropdown Component
+const getDay = (dateStr: string) => {
+  if (!dateStr) return 0;
+  const num = Number(dateStr);
+  if (!isNaN(num) && num >= 1 && num <= 31) return num;
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? 0 : d.getDate();
+};
 const formatDate = (dateStr: string) => {
   if (!dateStr) return '-';
-  return String(new Date(dateStr).getDate());
+  const day = getDay(dateStr);
+  return day > 0 ? String(day) : '-';
 };
 
 const CustomDropdown = ({
@@ -391,8 +399,8 @@ export default function App() {
         switch (dbSort) {
           case 'name_asc': return a.name.localeCompare(b.name);
           case 'name_desc': return b.name.localeCompare(a.name);
-          case 'date_asc': return Number(new Date(a.join_date).getDate()) - Number(new Date(b.join_date).getDate());
-          case 'date_desc': return Number(new Date(b.join_date).getDate()) - Number(new Date(a.join_date).getDate());
+          case 'date_asc': return getDay(a.join_date) - getDay(b.join_date);
+          case 'date_desc': return getDay(b.join_date) - getDay(a.join_date);
           default: return 0;
         }
       });
@@ -463,7 +471,7 @@ export default function App() {
                     <div className="sm:hidden text-[10px] text-slate-500 font-normal">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : 'N/A'}</div>
                   </td>
                   <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm hidden sm:table-cell">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : 'N/A'}</td>
-                  <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{new Date(client.join_date).getDate()}</td>
+                  <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{formatDate(client.join_date)}</td>
                   <td className="px-3 py-3 md:px-6 md:py-4 text-right space-x-1 md:space-x-2">
                     <button
                       onClick={() => {
@@ -471,7 +479,7 @@ export default function App() {
                         setClientForm({
                           name: client.name,
                           package_id: client.package_id.toString(),
-                          join_date: String(new Date(client.join_date).getDate())
+                          join_date: String(getDay(client.join_date))
                         });
                         setShowClientModal(true);
                       }}
@@ -515,8 +523,8 @@ export default function App() {
         switch (sesiSort) {
           case 'name_asc': return a.name.localeCompare(b.name);
           case 'name_desc': return b.name.localeCompare(a.name);
-          case 'date_asc': return Number(new Date(a.join_date).getDate()) - Number(new Date(b.join_date).getDate());
-          case 'date_desc': return Number(new Date(b.join_date).getDate()) - Number(new Date(a.join_date).getDate());
+          case 'date_asc': return getDay(a.join_date) - getDay(b.join_date);
+          case 'date_desc': return getDay(b.join_date) - getDay(a.join_date);
           default: return 0;
         }
       });
@@ -606,7 +614,7 @@ export default function App() {
                       {client.name}
                     </td>
                     <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{client.package_price ? `Rp ${client.package_price.toLocaleString('id-ID')}` : '-'}</td>
-                    <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{new Date(client.join_date).getDate()}</td>
+                    <td className="px-3 py-3 md:px-6 md:py-4 text-slate-600 text-xs md:text-sm">{formatDate(client.join_date)}</td>
                   </tr>
                 ))}
                 {filteredSesiClients.length === 0 && (
@@ -1090,16 +1098,14 @@ export default function App() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs md:text-sm font-bold text-slate-700 mb-1">Tanggal Gabung</label>
-                  <input
-                    required
-                    type="number"
-                    min="1"
-                    max="31"
+                  <CustomDropdown
+                    label="Tanggal Gabung"
                     value={clientForm.join_date}
-                    onChange={(e) => setClientForm({ ...clientForm, join_date: e.target.value })}
-                    className="w-full px-3 py-1.5 md:px-4 md:py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-xs md:text-sm"
-                    placeholder="Contoh: 15"
+                    onChange={(val) => setClientForm({ ...clientForm, join_date: val })}
+                    options={Array.from({ length: 31 }, (_, i) => ({
+                      value: String(i + 1),
+                      label: String(i + 1)
+                    }))}
                   />
                 </div>
                 <div className="pt-2 md:pt-4">
