@@ -932,7 +932,7 @@ export default function App() {
       <aside className="w-64 bg-white border-r border-slate-200 text-slate-600 hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-8">
           <div className="flex items-center gap-3 text-slate-800 mb-2">
-            <div className="bg-indigo-600 p-2 rounded-lg">
+            <div className="bg-indigo-600 p-2 rounded-lg text-white">
               <Wifi size={24} />
             </div>
             <h1 className="text-xl font-black tracking-tight">WIFI MANAGER</h1>
