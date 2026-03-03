@@ -262,7 +262,23 @@ export default function App() {
   };
 
   const handlePrintSesi = (sesiNum: number) => {
-    const sessionClients = getClientsBySesi(sesiNum);
+    const sessionClients = getClientsBySesi(sesiNum)
+      .filter(c => {
+        const searchLower = sesiSearch.toLowerCase();
+        const priceStr = c.package_price ? `rp ${c.package_price.toLocaleString('id-ID')}` : '';
+        return c.name.toLowerCase().includes(searchLower) ||
+          (c.package_name || '').toLowerCase().includes(searchLower) ||
+          priceStr.toLowerCase().includes(searchLower);
+      })
+      .sort((a, b) => {
+        switch (sesiSort) {
+          case 'name_asc': return a.name.localeCompare(b.name);
+          case 'name_desc': return b.name.localeCompare(a.name);
+          case 'date_asc': return getDay(a.join_date) - getDay(b.join_date);
+          case 'date_desc': return getDay(b.join_date) - getDay(a.join_date);
+          default: return 0;
+        }
+      });
     const storeName = settings['printer_store_name'] || 'WIFI MANAGER';
     const address = settings['printer_address'] || '';
     const footer = settings['printer_footer'] || 'Terima Kasih';
@@ -351,7 +367,7 @@ export default function App() {
                   <td>${index + 1}</td>
                   <td>${c.name}</td>
                   <td>${c.package_price ? `Rp ${c.package_price.toLocaleString('id-ID')}` : '-'}</td>
-                  <td style="text-align: right">${new Date(c.join_date).getDate()}</td>
+                  <td style="text-align: right">${getDay(c.join_date)}</td>
                 </tr>
               `).join('')}
             </tbody>
