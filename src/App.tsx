@@ -929,9 +929,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
       {/* Sidebar - Desktop Only */}
-      <aside className="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col sticky top-0 h-screen">
+      <aside className="w-64 bg-white border-r border-slate-200 text-slate-600 hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-8">
-          <div className="flex items-center gap-3 text-white mb-2">
+          <div className="flex items-center gap-3 text-slate-800 mb-2">
             <div className="bg-indigo-600 p-2 rounded-lg">
               <Wifi size={24} />
             </div>
@@ -943,35 +943,35 @@ export default function App() {
         <nav className="flex-1 px-4 space-y-2">
           <button
             onClick={() => setActiveMenu('DATABASE')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'DATABASE' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'hover:bg-slate-800'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'DATABASE' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <DbIcon size={20} /> <span className="font-medium">DATABASE</span>
           </button>
           <button
             onClick={() => setActiveMenu('SESI_PENARIKAN')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'SESI_PENARIKAN' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'hover:bg-slate-800'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'SESI_PENARIKAN' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <Clock size={20} /> <span className="font-medium">SESI PENARIKAN</span>
           </button>
           <button
             onClick={() => setActiveMenu('PAKET_WIFI')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'PAKET_WIFI' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'hover:bg-slate-800'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'PAKET_WIFI' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <Wifi size={20} /> <span className="font-medium">PAKET WIFI</span>
           </button>
           <button
             onClick={() => setActiveMenu('PENGATURAN')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'PENGATURAN' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'hover:bg-slate-800'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMenu === 'PENGATURAN' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100'
               }`}
           >
             <SettingsIcon size={20} /> <span className="font-medium">PENGATURAN</span>
           </button>
         </nav>
 
-        <div className="p-8 text-xs text-slate-600 border-t border-slate-800">
+        <div className="p-8 text-xs text-slate-400 border-t border-slate-200">
           &copy; 2024 WiFi Manager v1.0
         </div>
       </aside>
