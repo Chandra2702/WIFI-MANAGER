@@ -350,7 +350,7 @@ export default function App() {
           <div class="session-info">
             <strong>LAPORAN SESI ${sesiNum}</strong><br>
             Rentang: Tgl ${start} - ${end}<br>
-            Dicetak: ${formatDate(new Date().toISOString())}
+            Dicetak: ${(() => { const d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; })()}
           </div>
           <table>
             <thead>
