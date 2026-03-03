@@ -286,25 +286,32 @@ export default function App() {
     const end = settings[`sesi_${sesiNum}_end`];
     const paperSize = settings['printer_paper_size'] || '80mm';
 
-    let pageSize = '80mm 297mm';
     let bodyWidth = '300px';
+    let bodyMaxWidth = '300px';
     let windowWidth = '400';
     let fontSize = '12px';
     let titleSize = '18px';
+    let pageMargin = '3mm';
+    let pageSizeCSS = '80mm auto';
 
     if (paperSize === '58mm') {
-      pageSize = '58mm 297mm';
       bodyWidth = '200px';
+      bodyMaxWidth = '200px';
       windowWidth = '280';
       fontSize = '10px';
       titleSize = '16px';
+      pageSizeCSS = '58mm auto';
     } else if (paperSize === 'A4') {
-      pageSize = 'A4';
       bodyWidth = '100%';
+      bodyMaxWidth = '100%';
       windowWidth = '800';
       fontSize = '14px';
       titleSize = '24px';
+      pageMargin = '15mm';
+      pageSizeCSS = 'A4';
     }
+
+    const isThermal = paperSize !== 'A4';
 
     const printWindow = window.open('', '_blank', `width=${windowWidth},height=600`);
     if (!printWindow) return;
@@ -315,14 +322,14 @@ export default function App() {
           <title>Cetak Sesi ${sesiNum}</title>
           <style>
             @page { 
-              size: ${pageSize}; 
-              margin: ${paperSize === 'A4' ? '15mm' : '3mm'}; 
+              size: ${pageSizeCSS} !important; 
+              margin: ${pageMargin} !important; 
             }
-            * { box-sizing: border-box; }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
             body { 
               font-family: ${paperSize === 'A4' ? "'Segoe UI', Arial, sans-serif" : "'Courier New', Courier, monospace"}; 
               width: ${bodyWidth}; 
-              max-width: ${bodyWidth};
+              max-width: ${bodyMaxWidth};
               padding: ${paperSize === 'A4' ? '20px' : '5px'}; 
               font-size: ${fontSize};
               color: #000;
@@ -336,48 +343,76 @@ export default function App() {
             td { padding: ${paperSize === 'A4' ? '8px 4px' : '5px 0'}; vertical-align: top; font-size: ${fontSize}; }
             .total { border-top: 1px solid #000; margin-top: 10px; padding-top: 5px; font-weight: bold; text-align: right; }
             .footer { text-align: center; margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px; font-size: ${paperSize === 'A4' ? '12px' : '10px'}; }
+            .page-break { page-break-after: always; break-after: page; }
+            .page-info { text-align: center; font-size: ${isThermal ? '9px' : '11px'}; color: #666; margin-top: 8px; border-top: 1px dashed #999; padding-top: 5px; }
             @media print {
-              body { width: ${bodyWidth}; max-width: ${bodyWidth}; }
+              html, body { 
+                width: ${bodyWidth} !important; 
+                max-width: ${bodyMaxWidth} !important; 
+                margin: 0 !important;
+                padding: ${isThermal ? '2px' : '20px'} !important;
+              }
               .no-print { display: none; }
+              .page-break { page-break-after: always; break-after: page; }
             }
           </style>
         </head>
         <body>
-          <div class="header">
-            <div class="title">${storeName}</div>
-            <div>${address}</div>
-          </div>
-          <div class="session-info">
-            <strong>LAPORAN SESI ${sesiNum}</strong><br>
-            Rentang: Tgl ${start} - ${end}<br>
-            Dicetak: ${(() => { const d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; })()}
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 30px">No</th>
-                <th>Nama</th>
-                <th>Paket</th>
-                <th style="text-align: right">Tgl</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sessionClients.map((c, index) => `
-                <tr>
-                  <td>${index + 1}</td>
-                  <td>${c.name}</td>
-                  <td>${c.package_price ? `Rp ${c.package_price.toLocaleString('id-ID')}` : '-'}</td>
-                  <td style="text-align: right">${getDay(c.join_date)}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <div class="total">
-            Total Pelanggan: ${sessionClients.length}
-          </div>
-          <div class="footer">
-            ${footer}
-          </div>
+          ${(() => {
+        const perPage = isThermal ? 25 : sessionClients.length;
+        const totalPages = Math.ceil(sessionClients.length / perPage) || 1;
+        const printDate = (() => { const d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; })();
+        let pages = '';
+        for (let p = 0; p < totalPages; p++) {
+          const chunk = sessionClients.slice(p * perPage, (p + 1) * perPage);
+          const isLast = p === totalPages - 1;
+          pages += `
+                <div class="header">
+                  <div class="title">${storeName}</div>
+                  <div>${address}</div>
+                </div>
+                <div class="session-info">
+                  <strong>LAPORAN SESI ${sesiNum}</strong><br>
+                  Rentang: Tgl ${start} - ${end}<br>
+                  Dicetak: ${printDate}
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 30px">No</th>
+                      <th>Nama</th>
+                      <th>Paket</th>
+                      <th style="text-align: right">Tgl</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${chunk.map((c, index) => `
+                      <tr>
+                        <td>${p * perPage + index + 1}</td>
+                        <td>${c.name}</td>
+                        <td>${c.package_price ? `Rp ${c.package_price.toLocaleString('id-ID')}` : '-'}</td>
+                        <td style="text-align: right">${getDay(c.join_date)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+                ${isLast ? `
+                  <div class="total">
+                    Total Pelanggan: ${sessionClients.length}
+                  </div>
+                  <div class="footer">
+                    ${footer}
+                  </div>
+                ` : `
+                  <div class="page-info">
+                    Halaman ${p + 1} / ${totalPages}
+                  </div>
+                  <div class="page-break"></div>
+                `}
+              `;
+        }
+        return pages;
+      })()}
           <script>
             window.onload = () => {
               window.print();
